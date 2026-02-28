@@ -1,0 +1,29 @@
+{
+  "name": "ngx-clippy",
+  "version": "1.0.0",
+  "description": "Angular component library for adding nostalgic Microsoft Office assistant characters to your application",
+  "keywords": [
+    "angular",
+    "clippy",
+    "microsoft",
+    "office",
+    "assistant",
+    "animation",
+    "nostalgia"
+  ],
+  "author": "Converted from clippyjs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsbissett/ngx-clippy"
+  },
+  "peerDependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "rxjs": "^7.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

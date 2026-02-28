@@ -1,0 +1,81 @@
+<div class="container">
+  <h1>{{ title }}</h1>
+  
+  <div class="info-box">
+    <h2>🎯 Angular Clippy Component Library</h2>
+    <p>
+      This is a demonstration of <strong>ngx-clippy</strong>, a complete Angular rewrite 
+      of ClippyJS following SOLID principles.
+    </p>
+    <ul>
+      <li>✅ SOLID design principles</li>
+      <li>✅ RxJS Observables (no callbacks)</li>
+      <li>✅ TypeScript with full type safety</li>
+      <li>✅ No jQuery dependency</li>
+      <li>✅ Cyclomatic complexity ≤ 5</li>
+      <li>✅ Fully testable with DI</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <h3>Agent Selection</h3>
+    <div class="button-group">
+      <button
+        *ngFor="let agentOption of availableAgents; trackBy: trackByAgentName"
+        [class.active]="isCurrentAgent(agentOption.name)"
+        (click)="loadAgent(agentOption)"
+      >
+        Load {{ agentOption.name }}
+      </button>
+    </div>
+
+    <h3>Agent Controls</h3>
+    <div class="button-group">
+      <button [disabled]="!isAgentReady()" (click)="showAgent()">Show</button>
+      <button [disabled]="!isAgentReady()" (click)="hideAgent()">Hide</button>
+      <button [disabled]="!isAgentReady()" (click)="playAnimation()">Random Animation</button>
+      <button [disabled]="!isAgentReady()" (click)="speak()">Speak</button>
+      <button [disabled]="!isAgentReady()" (click)="moveAgent()">Move Random</button>
+      <button [disabled]="!isAgentReady()" (click)="stopCurrentAction()">Stop Current</button>
+      <button [disabled]="!isAgentReady()" (click)="stopAllActions()">Stop All</button>
+      <button [disabled]="!isAgentReady()" (click)="closeSpeechBalloon()">Close Balloon</button>
+    </div>
+
+    <h3>Animation Actions ({{ availableAnimations().length }})</h3>
+    <div class="action-grid">
+      <button
+        *ngFor="let animationName of availableAnimations(); trackBy: trackByValue"
+        [disabled]="!isAgentReady()"
+        (click)="playNamedAnimation(animationName)"
+      >
+        {{ animationName }}
+      </button>
+    </div>
+  </div>
+
+  <div class="code-example">
+    <h3>Usage Example</h3>
+    <pre><code>import {{ '{' }} NgxClippyModule, AgentLoaderService, ClippyAgent {{ '}' }} from 'ngx-clippy';
+
+@Component({{ '{' }}
+  selector: 'app-root',
+  imports: [NgxClippyModule],
+  template: `&lt;clippy-agent [agentConfig]="agentConfig"&gt;&lt;/clippy-agent&gt;`
+{{ '}' }})
+export class AppComponent implements OnInit {{ '{' }}
+  agentConfig?: AgentConfig;
+
+  constructor(private agentLoader: AgentLoaderService) {{ '{' }}{{ '}' }}
+
+  ngOnInit() {{ '{' }}
+    this.agentLoader.loadAgent('Clippy', ClippyAgent).subscribe(config => {{ '{' }}
+      this.agentConfig = config;
+      this.agent.show();
+      this.agent.speak('Hello!');
+    {{ '}' }});
+  {{ '}' }}
+{{ '}' }}</code></pre>
+  </div>
+</div>
+
+<clippy-agent *ngIf="agentConfig() as config" [agentConfig]="config"></clippy-agent>
