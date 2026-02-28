@@ -6,9 +6,10 @@
   },
   "assets": [
     {
-      "glob": "**/map.avif",
+      "glob": "**/map.png",
       "input": "src/agents",
       "output": "assets/agents"
     }
   ]
 }
+

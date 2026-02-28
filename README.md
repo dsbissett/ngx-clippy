@@ -25,7 +25,7 @@ This repository is an Angular workspace with two projects:
           <agent-name>/
             agent.ts
             sounds-ogg.ts
-            map.avif
+            map.png
         lib/
           components/
             clippy-agent/
@@ -161,3 +161,4 @@ This bypasses package alias resolution in editors that are not loading workspace
 - Run all Jasmine unit tests: `npm run test:ci`
 - Run library Jasmine tests: `npm run test:unit:ci`
 - Run demo Jasmine tests: `npm run test:demo:ci`
+

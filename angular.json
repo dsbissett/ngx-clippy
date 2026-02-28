@@ -77,7 +77,7 @@
                 "input": "projects/demo/public"
               },
               {
-                "glob": "**/map.avif",
+                "glob": "**/map.png",
                 "input": "projects/ngx-clippy/src/agents",
                 "output": "assets/agents"
               }
@@ -132,3 +132,4 @@
     }
   }
 }
+

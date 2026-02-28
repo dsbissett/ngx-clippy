@@ -26,7 +26,7 @@ describe('AgentLoaderService', () => {
     const soundModule = { default: { beep: '/assets/beep.mp3' } };
     const loaders = createLoaders({
       agentResult: of({ default: agentData }),
-      mapResult: Promise.resolve('/assets/map.avif'),
+      mapResult: Promise.resolve('/assets/map.png'),
       soundResult: Promise.resolve(soundModule),
     });
 
@@ -35,7 +35,7 @@ describe('AgentLoaderService', () => {
     expect(result).toEqual({
       name: 'Clippy',
       agentData,
-      mapUrl: '/assets/map.avif',
+      mapUrl: '/assets/map.png',
       sounds: soundModule.default,
     });
     expect(loaders.agent).toHaveBeenCalledTimes(1);
@@ -53,7 +53,7 @@ describe('AgentLoaderService', () => {
     const agentData = createAgentData();
     const loaders = createLoaders({
       agentResult: Promise.resolve({ default: agentData }),
-      mapResult: of('/assets/map.avif'),
+      mapResult: of('/assets/map.png'),
       soundResult: of({ default: { shouldNot: 'load' } }),
     });
 
@@ -61,7 +61,7 @@ describe('AgentLoaderService', () => {
 
     expect(result.name).toBe('Bonzi');
     expect(result.agentData).toBe(agentData);
-    expect(result.mapUrl).toBe('/assets/map.avif');
+    expect(result.mapUrl).toBe('/assets/map.png');
     expect(result.sounds).toEqual({});
     expect(loaders.sound).not.toHaveBeenCalled();
     expect(canPlayTypeSpy).toHaveBeenCalledWith('audio/mp3');
@@ -73,7 +73,7 @@ describe('AgentLoaderService', () => {
     const agentData = createAgentData();
     const loaders = createLoaders({
       agentResult: of({ default: agentData }),
-      mapResult: of('/assets/map.avif'),
+      mapResult: of('/assets/map.png'),
       soundResult: of({ default: { shouldNot: 'load' } }),
     });
 
@@ -108,3 +108,4 @@ function createAgentData(): AgentData {
     animations: {},
   };
 }
+

@@ -135,7 +135,7 @@ describe('ClippyAgentComponent', () => {
     expect(drag.enableDrag).toHaveBeenCalledWith(container);
     expect(tts.initialize).toHaveBeenCalledWith(config.agentData.tts);
 
-    const newConfig = makeAgentConfig({ mapUrl: '/map-2.avif' });
+    const newConfig = makeAgentConfig({ mapUrl: '/map-2.png' });
     fixture.componentRef.setInput('agentConfig', newConfig);
     fixture.detectChanges();
     jasmine.clock().tick(0);
@@ -595,7 +595,7 @@ describe('ClippyAgentComponent', () => {
 function makeAgentConfig(overrides: Partial<AgentConfig> = {}): AgentConfig {
   return {
     name: 'Clippy',
-    mapUrl: '/map.avif',
+    mapUrl: '/map.png',
     sounds: {},
     agentData: {
       framesize: [160, 120],
@@ -639,3 +639,4 @@ function makeRect(left: number, top: number, width: number, height: number): DOM
     toJSON: () => ({}),
   } as DOMRect;
 }
+
