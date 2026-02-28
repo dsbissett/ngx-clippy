@@ -93,6 +93,7 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
   private isHidden = true;
   private idleLoopToken = 0;
   private idleLoopSubscription?: Subscription;
+  private viewportSyncTimeoutId?: ReturnType<typeof setTimeout>;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor(
@@ -156,6 +157,7 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
         : immediateOrOptions.position;
 
     this.cancelIdleLoop();
+    this.cancelViewportSync();
     this.isHidden = false;
 
     // Apply position before first paint so show(position) never flashes at a default location.
@@ -180,6 +182,7 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
 
   hide(immediate = false): void {
     this.cancelIdleLoop();
+    this.cancelViewportSync();
     this.isHidden = true;
     if (immediate) {
       this.isVisible.set(false);
@@ -516,10 +519,29 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
   }
 
   private scheduleViewportSync(): void {
-    setTimeout(() => {
-      if (!this.isHidden) {
-        this.positionAgent();
+    this.cancelViewportSync();
+    this.viewportSyncTimeoutId = setTimeout(() => {
+      this.viewportSyncTimeoutId = undefined;
+      if (this.isHidden) {
+        return;
       }
+
+      const element = this.containerRef().nativeElement;
+      const hasPosition = element.style.left !== '' && element.style.top !== '';
+      if (!hasPosition) {
+        this.positionAgent();
+        return;
+      }
+
+      const currentX = parseFloat(element.style.left);
+      const currentY = parseFloat(element.style.top);
+      if (!Number.isFinite(currentX) || !Number.isFinite(currentY)) {
+        this.positionAgent();
+        return;
+      }
+
+      const clamped = this.clampPosition(currentX, currentY);
+      this.setPosition(clamped.x, clamped.y);
     }, 0);
   }
 
@@ -578,9 +600,18 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
 
   private dispose(): void {
     this.cancelIdleLoop();
+    this.cancelViewportSync();
     this.animationService.dispose();
     this.speechBalloonService.dispose();
     this.dragDropService.dispose();
     this.ttsService.cancel();
+  }
+
+  private cancelViewportSync(): void {
+    if (this.viewportSyncTimeoutId === undefined) {
+      return;
+    }
+    clearTimeout(this.viewportSyncTimeoutId);
+    this.viewportSyncTimeoutId = undefined;
   }
 }

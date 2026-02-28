@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   constructor(private readonly agentLoader: AgentLoaderService) {}
 
   ngOnInit(): void {
-    this.agentLoader.loadAgent('Clippy', ClippyAgent).subscribe((config) => {
+    this.agentLoader.loadAgent(ClippyAgent).subscribe((config) => {
       this.agentConfig.set(config);
       this.agent()?.show(true);
     });

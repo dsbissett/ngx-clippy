@@ -190,6 +190,25 @@ describe('ClippyAgentComponent', () => {
     expect(playSpy).toHaveBeenCalledWith('Show');
   });
 
+  it('cancels pending viewport sync before show(position)', () => {
+    jasmine.clock().install();
+    const c = component as unknown as {
+      scheduleViewportSync: () => void;
+      positionAgent: () => void;
+    };
+    const positionSpy = spyOn(c, 'positionAgent').and.callThrough();
+
+    c.scheduleViewportSync();
+    drag.clampToViewport.and.returnValue({ x: 30, y: 40 });
+    component.show({ immediate: true, position: { x: 30, y: 40 } });
+    jasmine.clock().tick(0);
+
+    expect(positionSpy).not.toHaveBeenCalled();
+    expect(container.style.left).toBe('30px');
+    expect(container.style.top).toBe('40px');
+    jasmine.clock().uninstall();
+  });
+
   it('handles hide immediate and queued branches', () => {
     component.show(true);
     component.hide(true);
@@ -544,10 +563,22 @@ describe('ClippyAgentComponent', () => {
     jasmine.clock().tick(0);
     expect(positionSpy).not.toHaveBeenCalled();
 
+    container.style.left = '';
+    container.style.top = '';
     c.isHidden = false;
     c.scheduleViewportSync();
     jasmine.clock().tick(0);
     expect(positionSpy).toHaveBeenCalled();
+
+    positionSpy.calls.reset();
+    setPosSpy.calls.reset();
+    drag.clampToViewport.and.returnValue({ x: 88, y: 99 });
+    container.style.left = '88px';
+    container.style.top = '99px';
+    c.scheduleViewportSync();
+    jasmine.clock().tick(0);
+    expect(positionSpy).not.toHaveBeenCalled();
+    expect(setPosSpy).toHaveBeenCalledWith(88, 99);
     jasmine.clock().uninstall();
   });
 

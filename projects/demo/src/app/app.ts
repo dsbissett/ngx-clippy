@@ -113,7 +113,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   loadAgent(agentOption: { name: string; loader: AgentLoaders }): void {
-    this.requestAgentLoad(this.agentLoader.loadAgent(agentOption.name, agentOption.loader));
+    this.requestAgentLoad(this.agentLoader.loadAgent(agentOption.loader));
   }
 
   showWelcome(): void {

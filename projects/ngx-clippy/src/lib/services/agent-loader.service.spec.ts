@@ -25,12 +25,13 @@ describe('AgentLoaderService', () => {
     const agentData = createAgentData();
     const soundModule = { default: { beep: '/assets/beep.mp3' } };
     const loaders = createLoaders({
+      name: 'Clippy',
       agentResult: of({ default: agentData }),
       mapResult: Promise.resolve('/assets/map.png'),
       soundResult: Promise.resolve(soundModule),
     });
 
-    const result = await firstValueFrom(service.loadAgent('Clippy', loaders));
+    const result = await firstValueFrom(service.loadAgent(loaders));
 
     expect(result).toEqual({
       name: 'Clippy',
@@ -52,12 +53,13 @@ describe('AgentLoaderService', () => {
 
     const agentData = createAgentData();
     const loaders = createLoaders({
+      name: 'Bonzi',
       agentResult: Promise.resolve({ default: agentData }),
       mapResult: of('/assets/map.png'),
       soundResult: of({ default: { shouldNot: 'load' } }),
     });
 
-    const result = await firstValueFrom(service.loadAgent('Bonzi', loaders));
+    const result = await firstValueFrom(service.loadAgent(loaders));
 
     expect(result.name).toBe('Bonzi');
     expect(result.agentData).toBe(agentData);
@@ -72,19 +74,49 @@ describe('AgentLoaderService', () => {
 
     const agentData = createAgentData();
     const loaders = createLoaders({
+      name: 'Rover',
       agentResult: of({ default: agentData }),
       mapResult: of('/assets/map.png'),
       soundResult: of({ default: { shouldNot: 'load' } }),
     });
 
-    const result = await firstValueFrom(service.loadAgent('Rover', loaders));
+    const result = await firstValueFrom(service.loadAgent(loaders));
 
     expect(result.sounds).toEqual({});
     expect(loaders.sound).not.toHaveBeenCalled();
   });
+
+  it('derives name from map path when loader name is not provided', async () => {
+    spyOn(document, 'createElement').and.returnValue({} as HTMLAudioElement);
+
+    const agentData = createAgentData();
+    const loaders = createLoaders({
+      agentResult: of({ default: agentData }),
+      mapResult: of('assets/agents/merlin/map.png'),
+      soundResult: of({ default: {} }),
+    });
+
+    const result = await firstValueFrom(service.loadAgent(loaders));
+    expect(result.name).toBe('Merlin');
+  });
+
+  it('keeps legacy two-argument loadAgent signature', async () => {
+    spyOn(document, 'createElement').and.returnValue({} as HTMLAudioElement);
+
+    const agentData = createAgentData();
+    const loaders = createLoaders({
+      agentResult: of({ default: agentData }),
+      mapResult: of('/assets/map.png'),
+      soundResult: of({ default: {} }),
+    });
+
+    const result = await firstValueFrom(service.loadAgent('CustomName', loaders));
+    expect(result.name).toBe('CustomName');
+  });
 });
 
 function createLoaders(params: {
+  name?: string;
   agentResult: ObservableInput<{ default: AgentData }>;
   mapResult: ObservableInput<string>;
   soundResult: ObservableInput<{ default: Record<string, string> }>;
@@ -94,6 +126,7 @@ function createLoaders(params: {
   sound: jasmine.Spy<AgentLoaders['sound']>;
 } {
   return {
+    name: params.name,
     agent: jasmine.createSpy('agent').and.returnValue(params.agentResult),
     map: jasmine.createSpy('map').and.returnValue(params.mapResult),
     sound: jasmine.createSpy('sound').and.returnValue(params.soundResult),

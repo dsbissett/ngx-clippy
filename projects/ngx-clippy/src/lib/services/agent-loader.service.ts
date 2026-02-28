@@ -8,6 +8,11 @@ import { AgentConfig } from '../models/agent-config.interface';
  * Each function may return an Observable, a Promise, or any other ObservableInput.
  */
 export interface AgentLoaders {
+  /**
+   * Optional display name for this loader.
+   * When provided, loadAgent(loaders) can derive AgentConfig.name directly.
+   */
+  name?: string;
   agent: () => ObservableInput<{ default: any }>;
   sound: () => ObservableInput<{ default: any }>;
   map: () => ObservableInput<string>;
@@ -22,20 +27,47 @@ export interface AgentLoaders {
 })
 export class AgentLoaderService {
   /**
-   * Load agent configuration from loaders (cyclomatic complexity: 2)
+   * Load agent configuration from loaders.
+   * Preferred signature derives name from loaders.
+   * Legacy signature with explicit name is kept for backwards compatibility.
    */
-  loadAgent(name: string, loaders: AgentLoaders): Observable<AgentConfig> {
+  loadAgent(loaders: AgentLoaders): Observable<AgentConfig>;
+  loadAgent(name: string, loaders: AgentLoaders): Observable<AgentConfig>;
+  loadAgent(nameOrLoaders: string | AgentLoaders, maybeLoaders?: AgentLoaders): Observable<AgentConfig> {
+    const explicitName = typeof nameOrLoaders === 'string' ? nameOrLoaders : undefined;
+    const loaders = typeof nameOrLoaders === 'string' ? maybeLoaders : nameOrLoaders;
+    if (!loaders) {
+      throw new Error('Agent loaders are required.');
+    }
+
     return forkJoin({
       agentData: loaders.agent(),
       mapUrl: loaders.map(),
       sounds: this.loadSounds(loaders)
     }).pipe(
       map(({ agentData, mapUrl, sounds }) => ({
-        name,
+        name: explicitName ?? this.deriveName(loaders, mapUrl),
         agentData: agentData.default,
         mapUrl,
         sounds
       }))
+    );
+  }
+
+  private deriveName(loaders: AgentLoaders, mapUrl: string): string {
+    if (typeof loaders.name === 'string' && loaders.name.trim() !== '') {
+      return loaders.name.trim();
+    }
+
+    const mapMatch = mapUrl.match(/(?:^|\/|\\)agents(?:\/|\\)([^/\\]+)(?:\/|\\)/i);
+    if (mapMatch && mapMatch[1]) {
+      const rawName = mapMatch[1];
+      return rawName.charAt(0).toUpperCase() + rawName.slice(1);
+    }
+
+    throw new Error(
+      'Agent name could not be derived from loaders. ' +
+      'Provide loaders.name or call loadAgent(name, loaders).'
     );
   }
 
