@@ -1,6 +1,6 @@
 {
   "name": "@dsbissett/ngx-clippy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Angular component library for adding nostalgic Microsoft Office assistant characters to your application",
   "keywords": [
     "angular",
