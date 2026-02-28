@@ -1,5 +1,11 @@
 # ngx-clippy Workspace
 
+[![CI](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml)
+[![Release](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml/badge.svg)](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml)
+[![npm version](https://img.shields.io/npm/v/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
+[![npm downloads](https://img.shields.io/npm/dm/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repository is an Angular workspace with two projects:
 
 - `projects/ngx-clippy`: the reusable Angular library.
