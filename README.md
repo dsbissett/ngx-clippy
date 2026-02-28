@@ -1,4 +1,4 @@
-# ngx-clippy Workspace
+# ngx-clippy
 
 [![CI](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml)
 [![Release](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml/badge.svg)](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml)
@@ -14,7 +14,7 @@ This repository is an Angular workspace with two projects:
 ## Project Structure
 
 ```text
-ngx-clippy-workspace/
+./
   angular.json
   tsconfig.json
   projects/
