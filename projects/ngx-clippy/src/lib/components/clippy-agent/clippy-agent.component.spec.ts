@@ -151,6 +151,7 @@ describe('ClippyAgentComponent', () => {
   it('handles show branches with and without initial position', () => {
     const positionSpy = spyOn(component as unknown as { positionAgent: () => void }, 'positionAgent').and.callThrough();
     const syncSpy = spyOn(component as unknown as { scheduleViewportSync: () => void }, 'scheduleViewportSync').and.callThrough();
+    const setPositionSpy = spyOn(component as unknown as { setPosition: (x: number, y: number) => void }, 'setPosition').and.callThrough();
     const playSpy = spyOn(component, 'play').and.returnValue(true);
 
     container.style.left = '';
@@ -169,6 +170,24 @@ describe('ClippyAgentComponent', () => {
     expect(positionSpy).not.toHaveBeenCalled();
     expect(syncSpy).not.toHaveBeenCalled();
     expect(playSpy).not.toHaveBeenCalled();
+
+    positionSpy.calls.reset();
+    syncSpy.calls.reset();
+    playSpy.calls.reset();
+    setPositionSpy.calls.reset();
+    drag.clampToViewport.and.returnValue({ x: 100, y: 200 });
+    component.show({ position: { x: 999, y: 888 }, immediate: true });
+    expect(setPositionSpy).toHaveBeenCalledWith(100, 200);
+    expect(positionSpy).not.toHaveBeenCalled();
+    expect(syncSpy).not.toHaveBeenCalled();
+    expect(playSpy).not.toHaveBeenCalled();
+
+    setPositionSpy.calls.reset();
+    playSpy.calls.reset();
+    drag.clampToViewport.and.returnValue({ x: 25, y: 35 });
+    component.show(false, { x: 25, y: 35 });
+    expect(setPositionSpy).toHaveBeenCalledWith(25, 35);
+    expect(playSpy).toHaveBeenCalledWith('Show');
   });
 
   it('handles hide immediate and queued branches', () => {

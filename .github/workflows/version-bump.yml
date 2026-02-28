@@ -1,0 +1,38 @@
+name: Version Bump
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-ngx-clippy-version:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Bump ngx-clippy patch version
+        id: bump
+        run: |
+          npm --prefix projects/ngx-clippy version patch --no-git-tag-version
+          echo "version=$(node -p 'require(\"./projects/ngx-clippy/package.json\").version')" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push version update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add projects/ngx-clippy/package.json
+          git commit -m "chore(release): bump ngx-clippy to v${{ steps.bump.outputs.version }}"
+          git push

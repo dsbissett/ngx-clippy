@@ -41,6 +41,10 @@ export class AppComponent implements OnInit {
     this.agent()?.show();
   }
 
+  showAt(x: number, y: number): void {
+    this.agent()?.show({ position: { x, y } });
+  }
+
   speak(): void {
     this.agent()?.speak('Hello from @dsbissett/ngx-clippy!', { tts: true });
   }
@@ -50,6 +54,24 @@ export class AppComponent implements OnInit {
 ## Available Agents
 
 `ClippyAgent`, `BonziAgent`, `F1Agent`, `GenieAgent`, `GeniusAgent`, `LinksAgent`, `MerlinAgent`, `PeedyAgent`, `RockyAgent`, `RoverAgent`
+
+## Positioning on Show
+
+`show()` supports optional position arguments while keeping existing behavior:
+
+```ts
+// Existing behavior (top-center on first show)
+agent.show();
+
+// Boolean signature still works
+agent.show(true);
+
+// Place agent at specific viewport coordinates
+agent.show({ position: { x: 300, y: 120 } });
+
+// Alternate signature with immediate + position
+agent.show(false, { x: 300, y: 120 });
+```
 
 ## Build (Library)
 

@@ -15,6 +15,7 @@ import { Observable, of, EMPTY, timer, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap, tap, finalize } from 'rxjs/operators';
 import { AgentConfig } from '../../models/agent-config.interface';
+import { Position } from '../../models/animation-state.interface';
 import { SpeechOptions } from '../../models/speech-options.interface';
 import { QueuedAction } from '../../models/action.interface';
 import { AnimationService } from '../../services/animation.service';
@@ -22,6 +23,14 @@ import { SpeechBalloonService } from '../../services/speech-balloon.service';
 import { ActionQueueService } from '../../services/action-queue.service';
 import { DragDropService } from '../../services/drag-drop.service';
 import { TextToSpeechService } from '../../services/text-to-speech.service';
+
+/**
+ * Options for show().
+ */
+export interface ShowOptions {
+  immediate?: boolean;
+  position?: Position;
+}
 
 /**
  * Main component for displaying and controlling an animated agent.
@@ -134,15 +143,31 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
 
   // ─── Public API ────────────────────────────────────────────────────────────
 
-  show(immediate = false): void {
+  show(immediate?: boolean, position?: Position): void;
+  show(options?: ShowOptions): void;
+  show(immediateOrOptions: boolean | ShowOptions = false, position?: Position): void {
+    const immediate =
+      typeof immediateOrOptions === 'boolean'
+        ? immediateOrOptions
+        : (immediateOrOptions.immediate ?? false);
+    const requestedPosition =
+      typeof immediateOrOptions === 'boolean'
+        ? position
+        : immediateOrOptions.position;
+
     this.cancelIdleLoop();
     this.isHidden = false;
     this.isVisible.set(true);
-    const element = this.containerRef().nativeElement;
-    const hasPosition = element.style.left !== '' && element.style.top !== '';
-    if (!hasPosition) {
-      this.positionAgent();
-      this.scheduleViewportSync();
+    if (requestedPosition) {
+      const clamped = this.clampPosition(requestedPosition.x, requestedPosition.y);
+      this.setPosition(clamped.x, clamped.y);
+    } else {
+      const element = this.containerRef().nativeElement;
+      const hasPosition = element.style.left !== '' && element.style.top !== '';
+      if (!hasPosition) {
+        this.positionAgent();
+        this.scheduleViewportSync();
+      }
     }
     if (!immediate) {
       this.play('Show');
