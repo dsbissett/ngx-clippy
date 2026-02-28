@@ -42,6 +42,16 @@ jobs:
           echo "name=$(node -p 'require(\"./dist/ngx-clippy/package.json\").name')" >> "$GITHUB_OUTPUT"
           echo "version=$(node -p 'require(\"./dist/ngx-clippy/package.json\").version')" >> "$GITHUB_OUTPUT"
 
+      - name: Verify tag matches package version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          expected="v${{ steps.pkg.outputs.version }}"
+          actual="${GITHUB_REF_NAME}"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Tag $actual does not match package version $expected."
+            exit 1
+          fi
+
       - name: Check if version already exists on npm
         id: npm-version
         run: |

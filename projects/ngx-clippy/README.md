@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml)
 [![Release](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml/badge.svg)](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml)
-[![npm version](https://img.shields.io/npm/v/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
-[![npm downloads](https://img.shields.io/npm/dm/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
+[![npm version](https://img.shields.io/npm/v/%40dsbissett%2Fngx-clippy.svg)](https://www.npmjs.com/package/@dsbissett/ngx-clippy)
+[![npm downloads](https://img.shields.io/npm/dm/%40dsbissett%2Fngx-clippy.svg)](https://www.npmjs.com/package/@dsbissett/ngx-clippy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Angular component library for adding nostalgic Microsoft Office assistant characters (Clippy and friends) to your Angular application.
@@ -27,7 +27,7 @@ This is a complete Angular rewrite of [ClippyJS](https://github.com/pi0/clippyjs
 ## Installation
 
 ```bash
-npm install ngx-clippy
+npm install @dsbissett/ngx-clippy
 ```
 
 ## Quick Start
@@ -37,7 +37,7 @@ npm install ngx-clippy
 ```typescript
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgxClippyModule } from 'ngx-clippy';
+import { NgxClippyModule } from '@dsbissett/ngx-clippy';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -55,7 +55,7 @@ export class AppModule { }
 
 ```typescript
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ClippyAgentComponent, AgentLoaderService, ClippyAgent, AgentConfig } from 'ngx-clippy';
+import { ClippyAgentComponent, AgentLoaderService, ClippyAgent, AgentConfig } from '@dsbissett/ngx-clippy';
 
 @Component({
   selector: 'app-root',
@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
 
 ## Available Agents
 
-Import any of these agents from `ngx-clippy`:
+Import any of these agents from `@dsbissett/ngx-clippy`:
 
 - `ClippyAgent` - The classic paperclip
 - `BonziAgent` - Bonzi Buddy
@@ -254,7 +254,7 @@ this.agent.hide();
 ### Using Different Agents
 
 ```typescript
-import { MerlinAgent, GenieAgent } from 'ngx-clippy';
+import { MerlinAgent, GenieAgent } from '@dsbissett/ngx-clippy';
 
 // Load Merlin
 this.agentLoader.loadAgent('Merlin', MerlinAgent).subscribe(config => {
@@ -304,8 +304,8 @@ All services are provided at the component level and can be easily mocked:
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ClippyAgentComponent } from 'ngx-clippy';
-import { AnimationService } from 'ngx-clippy';
+import { ClippyAgentComponent } from '@dsbissett/ngx-clippy';
+import { AnimationService } from '@dsbissett/ngx-clippy';
 
 describe('ClippyAgentComponent', () => {
   let component: ClippyAgentComponent;

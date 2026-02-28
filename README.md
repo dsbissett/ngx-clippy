@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dsbissett/ngx-clippy/actions/workflows/ci.yml)
 [![Release](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml/badge.svg)](https://github.com/dsbissett/ngx-clippy/actions/workflows/release.yml)
-[![npm version](https://img.shields.io/npm/v/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
-[![npm downloads](https://img.shields.io/npm/dm/ngx-clippy.svg)](https://www.npmjs.com/package/ngx-clippy)
+[![npm version](https://img.shields.io/npm/v/%40dsbissett%2Fngx-clippy.svg)](https://www.npmjs.com/package/@dsbissett/ngx-clippy)
+[![npm downloads](https://img.shields.io/npm/dm/%40dsbissett%2Fngx-clippy.svg)](https://www.npmjs.com/package/@dsbissett/ngx-clippy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This repository is an Angular workspace with two projects:
@@ -73,7 +73,7 @@ This repository is an Angular workspace with two projects:
 In practice, this is why app code can import:
 
 ```ts
-import { ClippyAgentComponent, AgentLoaderService, ClippyAgent } from 'ngx-clippy';
+import { ClippyAgentComponent, AgentLoaderService, ClippyAgent } from '@dsbissett/ngx-clippy';
 ```
 
 instead of deep internal paths.
@@ -96,7 +96,7 @@ import {
   AgentLoaderService,
   AgentConfig,
   ClippyAgent
-} from 'ngx-clippy';
+} from '@dsbissett/ngx-clippy';
 
 @Component({
   selector: 'app-root',
@@ -133,7 +133,7 @@ export class AppComponent implements OnInit {
   }
 
   speak(): void {
-    this.agent()?.speak('Hello from ngx-clippy!', { tts: true });
+    this.agent()?.speak('Hello from @dsbissett/ngx-clippy!', { tts: true });
   }
 }
 ```
