@@ -28,7 +28,14 @@ import { TextToSpeechService } from '../../services/text-to-speech.service';
  * Options for show().
  */
 export interface ShowOptions {
+  /**
+   * When true, skips the Show animation and renders immediately.
+   */
   immediate?: boolean;
+  /**
+   * Optional initial viewport position.
+   * When provided, position is applied before first paint to avoid visible repositioning.
+   */
   position?: Position;
 }
 
@@ -144,6 +151,12 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
 
   // ─── Public API ────────────────────────────────────────────────────────────
 
+  /**
+   * Show the agent.
+   *
+   * Overload 1: `show(immediate?, position?)`
+   * Overload 2: `show({ immediate, position })`
+   */
   show(immediate?: boolean, position?: Position): void;
   show(options?: ShowOptions): void;
   show(immediateOrOptions: boolean | ShowOptions = false, position?: Position): void {
@@ -180,6 +193,10 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Hide the agent.
+   * Set `immediate` to true to hide instantly without playing the Hide animation.
+   */
   hide(immediate = false): void {
     this.cancelIdleLoop();
     this.cancelViewportSync();
@@ -196,6 +213,10 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * Queue and play a named animation.
+   * Returns false if the animation does not exist on the current agent.
+   */
   play(animationName: string, timeout = 5000): boolean {
     if (!this.hasAnimation(animationName)) {
       return false;
@@ -221,6 +242,9 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     return true;
   }
 
+  /**
+   * Play a random non-idle animation.
+   */
   animate(): boolean {
     const animations = this.getAnimations();
     const nonIdleAnimations = animations.filter(name => !name.startsWith('Idle'));
@@ -231,6 +255,9 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     return this.play(nonIdleAnimations[randomIndex]);
   }
 
+  /**
+   * Show speech text in the balloon. Set `options.tts` to true to also use Web Speech TTS.
+   */
   speak(text: string, options: SpeechOptions = {}): void {
     this.enqueueAction({
       execute: () => {
@@ -243,6 +270,10 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * Stream speech text incrementally into the balloon.
+   * Completes when the source completes.
+   */
   speakStream(source: AsyncIterable<string>, options: SpeechOptions = {}): Observable<void> {
     return new Observable<void>(observer => {
       this.stop();
@@ -293,6 +324,10 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * Move the agent to viewport coordinates.
+   * Duration is in milliseconds; use 0 for an immediate move.
+   */
   moveTo(x: number, y: number, duration = 1000): void {
     const direction = this.calculateDirection(x, y);
     const moveAnimationName = 'Move' + direction;

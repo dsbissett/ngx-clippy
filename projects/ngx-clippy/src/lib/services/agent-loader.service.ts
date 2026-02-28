@@ -7,16 +7,36 @@ import { AgentConfig } from '../models/agent-config.interface';
  * Agent loader configuration.
  * Each function may return an Observable, a Promise, or any other ObservableInput.
  */
-export interface AgentLoaders {
+export interface AgentLoaders<TName extends string = string> {
   /**
    * Optional display name for this loader.
    * When provided, loadAgent(loaders) can derive AgentConfig.name directly.
    */
-  name?: string;
+  name?: TName;
+  /**
+   * Loader for the agent metadata module.
+   * Must resolve to a module object whose default export is agent data.
+   */
   agent: () => ObservableInput<{ default: any }>;
+  /**
+   * Loader for the agent sound module.
+   * Must resolve to a module object whose default export is a sound-url map.
+   */
   sound: () => ObservableInput<{ default: any }>;
+  /**
+   * Loader for the sprite map URL.
+   * Usually a static assets URL such as `assets/agents/clippy/map.png`.
+   */
   map: () => ObservableInput<string>;
 }
+
+/**
+ * Agent loader shape with a required name.
+ * Prefer this for best autocomplete and stronger inferred return typing.
+ */
+export type NamedAgentLoaders<TName extends string = string> = AgentLoaders<TName> & {
+  name: TName;
+};
 
 /**
  * Service for loading agent assets
@@ -28,10 +48,22 @@ export interface AgentLoaders {
 export class AgentLoaderService {
   /**
    * Load agent configuration from loaders.
-   * Preferred signature derives name from loaders.
-   * Legacy signature with explicit name is kept for backwards compatibility.
+   * Preferred signature: derive `config.name` from `loaders.name`.
+   */
+  loadAgent<TName extends string>(
+    loaders: NamedAgentLoaders<TName>
+  ): Observable<AgentConfig & { name: TName }>;
+
+  /**
+   * Load agent configuration from loaders with optional derived name.
+   * If `loaders.name` is missing, name is derived from `mapUrl` when possible.
    */
   loadAgent(loaders: AgentLoaders): Observable<AgentConfig>;
+
+  /**
+   * Load agent configuration with explicit name.
+   * @deprecated Prefer `loadAgent(loaders)` and set `loaders.name`.
+   */
   loadAgent(name: string, loaders: AgentLoaders): Observable<AgentConfig>;
   loadAgent(nameOrLoaders: string | AgentLoaders, maybeLoaders?: AgentLoaders): Observable<AgentConfig> {
     const explicitName = typeof nameOrLoaders === 'string' ? nameOrLoaders : undefined;
