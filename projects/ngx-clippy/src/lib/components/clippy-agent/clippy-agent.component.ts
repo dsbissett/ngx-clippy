@@ -157,7 +157,8 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
 
     this.cancelIdleLoop();
     this.isHidden = false;
-    this.isVisible.set(true);
+
+    // Apply position before first paint so show(position) never flashes at a default location.
     if (requestedPosition) {
       const clamped = this.clampPosition(requestedPosition.x, requestedPosition.y);
       this.setPosition(clamped.x, clamped.y);
@@ -169,6 +170,9 @@ export class ClippyAgentComponent implements AfterViewInit, OnDestroy {
         this.scheduleViewportSync();
       }
     }
+
+    this.isVisible.set(true);
+
     if (!immediate) {
       this.play('Show');
     }
