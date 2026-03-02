@@ -6,6 +6,8 @@
 [![npm downloads](https://img.shields.io/npm/dm/%40dsbissett%2Fngx-clippy.svg)](https://www.npmjs.com/package/@dsbissett/ngx-clippy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<img width="670" height="331" alt="image" src="https://github.com/user-attachments/assets/2a2477cd-b027-45ab-8df9-5a48b50c5bfd" />
+
 This repository is an Angular workspace with two projects:
 
 - `projects/ngx-clippy`: the reusable Angular library.
